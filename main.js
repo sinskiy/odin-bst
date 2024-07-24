@@ -1,6 +1,8 @@
 class Tree {
   constructor(array) {
-    this.root = buildTree(array);
+    const sorted = array.sort((a, b) => a - b);
+    const filtered = removeDuplicatesInSorted(sorted);
+    this.root = buildTree(filtered);
   }
 }
 
@@ -8,12 +10,12 @@ function buildTree(array) {
   const middleIndex = Math.floor(array.length / 2);
   const middle = array[middleIndex];
   const node = new Node(middle);
-  if (array.length === 1) {
+  if (array.length < 2) {
     return node;
   }
 
   const leftArray = array.slice(0, middleIndex);
-  const rightArray = array.slice(middleIndex + 1);
+  const rightArray = array.slice(middleIndex);
   node.left = buildTree(leftArray);
   node.right = buildTree(rightArray);
   return node;
@@ -27,7 +29,7 @@ class Node {
   }
 }
 
-const tree = new Tree([1, 2, 3, 4, 5, 6, 7]);
+const tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
   if (node === null) {
@@ -42,3 +44,13 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 prettyPrint(tree.root);
+
+function removeDuplicatesInSorted(array) {
+  const filtered = [];
+  for (let i = 0; i < array.length - 1; i++) {
+    if (array[i] !== array[i + 1]) {
+      filtered.push(array[i]);
+    }
+  }
+  return filtered;
+}
