@@ -4,10 +4,7 @@ class Tree {
     const filtered = removeDuplicatesInSortedArray(sorted);
     this.root = buildTree(filtered);
   }
-  insert(value) {
-    this.insertStartingAt(this.root, value);
-  }
-  insertStartingAt(node, value) {
+  insert(value, node = this.root) {
     const newNode = new Node(value);
 
     if (node === null) {
@@ -15,15 +12,12 @@ class Tree {
     } else if (value === node.data) {
       return;
     } else if (value < node.data) {
-      node.left = this.insertStartingAt(node.left, value) || node.left;
+      node.left = this.insert(value, node.left) || node.left;
     } else {
-      node.right = this.insertStartingAt(node.right, value) || node.right;
+      node.right = this.insert(value, node.right) || node.right;
     }
   }
-  deleteItem(value) {
-    this.deleteStartingAt(this.root, value);
-  }
-  deleteStartingAt(node, value) {
+  deleteItem(value, node = this.root) {
     if (node === null) return null;
 
     if (value === node.data) {
@@ -39,29 +33,38 @@ class Tree {
           temp = temp.left;
         }
         node.data = temp.data;
-        node.right = this.deleteStartingAt(node.right, temp.data);
+        node.right = this.deleteItem(temp.data, node.right);
         return node;
       }
     } else if (value < node.data) {
-      node.left = this.deleteStartingAt(node.left, value);
+      node.left = this.deleteItem(value, node.left);
       return node;
     } else {
-      node.right = this.deleteStartingAt(node.right, value);
+      node.right = this.deleteItem(value, node.right);
       return node;
     }
   }
-  find(value) {
-    return this.findStartingAt(this.root, value);
-  }
-  findStartingAt(node, value) {
+  find(value, node = this.root) {
     if (node === null) return null;
 
     if (value === node.data) {
       return node;
     } else if (value < node.data) {
-      return this.findStartingAt(node.left, value);
+      return this.find(value, node.left);
     } else {
-      return this.findStartingAt(node.right, value);
+      return this.find(value, node.right);
+    }
+  }
+  levelOrder(callback) {
+    if (!callback) throw new Error("Callback must be provided");
+
+    const queue = [this.root];
+    while (queue.length) {
+      const node = queue.shift();
+      callback(node);
+
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
     }
   }
 }
@@ -106,6 +109,7 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
   }
 };
+
 tree.insert(6);
 tree.insert(6);
 tree.insert(27);
@@ -118,12 +122,13 @@ tree.deleteItem(67);
 tree.deleteItem(5);
 tree.deleteItem(8);
 
-console.log(tree.find(9));
+prettyPrint(tree.root);
+tree.levelOrder((node) => console.log(node.data));
 
 function removeDuplicatesInSortedArray(array) {
   const filtered = [];
-  for (let i = 0; i < array.length - 1; i++) {
-    if (array[i] !== array[i + 1]) {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] !== array[i - 1]) {
       filtered.push(array[i]);
     }
   }
