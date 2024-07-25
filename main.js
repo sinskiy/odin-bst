@@ -1,8 +1,4 @@
-import {
-  removeDuplicatesInSortedArray,
-  prettyPrint,
-  createRandomTreeArray,
-} from "./helpers.js";
+import { removeDuplicatesInSortedArray } from "./helpers.js";
 
 export default class Tree {
   constructor(array) {
@@ -161,6 +157,11 @@ export default class Tree {
     // If we reached this as a root, tree is balanced
     if (this.root.data === node.data) return true;
     return Math.max(left, right) + 1;
+  }
+  rebalance() {
+    const array = [];
+    this.levelOrder((node) => array.push(node.data));
+    this.root = new Tree(array).root;
   }
 }
 
