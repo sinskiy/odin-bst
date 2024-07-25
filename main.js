@@ -2,7 +2,7 @@ import { removeDuplicatesInSortedArray } from "./helpers.js";
 
 export default class Tree {
   constructor(array) {
-    this.CALLBACK_ERROR = "Callback must be  provided";
+    this.CALLBACK_ERROR = "Callback must be provided";
 
     const sorted = array.sort((a, b) => a - b);
     const filtered = removeDuplicatesInSortedArray(sorted);
