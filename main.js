@@ -10,7 +10,6 @@ class Tree {
   insertStartingAt(node, value) {
     const newNode = new Node(value);
 
-    console.log(node);
     if (node === null) {
       return newNode;
     } else if (value === node.data) {
@@ -49,6 +48,20 @@ class Tree {
     } else {
       node.right = this.deleteStartingAt(node.right, value);
       return node;
+    }
+  }
+  find(value) {
+    return this.findStartingAt(this.root, value);
+  }
+  findStartingAt(node, value) {
+    if (node === null) return null;
+
+    if (value === node.data) {
+      return node;
+    } else if (value < node.data) {
+      return this.findStartingAt(node.left, value);
+    } else {
+      return this.findStartingAt(node.right, value);
     }
   }
 }
@@ -99,13 +112,13 @@ tree.insert(27);
 tree.insert(16);
 tree.insert(0);
 
-prettyPrint(tree.root);
 tree.deleteItem(4);
 tree.deleteItem(27);
 tree.deleteItem(67);
 tree.deleteItem(5);
 tree.deleteItem(8);
-prettyPrint(tree.root);
+
+console.log(tree.find(9));
 
 function removeDuplicatesInSortedArray(array) {
   const filtered = [];
