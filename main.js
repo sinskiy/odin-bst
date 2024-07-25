@@ -2,6 +2,8 @@ import { removeDuplicatesInSortedArray, prettyPrint } from "./helpers.js";
 
 class Tree {
   constructor(array) {
+    this.CALLBACK_ERROR = "Callback must be  provided";
+
     const sorted = array.sort((a, b) => a - b);
     const filtered = removeDuplicatesInSortedArray(sorted);
     this.root = this.buildTree(filtered);
@@ -74,7 +76,7 @@ class Tree {
     }
   }
   levelOrder(callback) {
-    if (!callback) throw new Error("Callback must be provided");
+    if (!callback) throw new Error(this.CALLBACK_ERROR);
 
     const queue = [this.root];
     while (queue.length) {
@@ -84,6 +86,33 @@ class Tree {
       if (node.left) queue.push(node.left);
       if (node.right) queue.push(node.right);
     }
+  }
+  inOrder(callback, node = this.root) {
+    if (!callback) throw new Error(this.CALLBACK_ERROR);
+
+    if (node === null) return;
+
+    this.inOrder(callback, node.left);
+    callback(node);
+    this.inOrder(callback, node.right);
+  }
+  preOrder(callback, node = this.root) {
+    if (!callback) throw new Error(this.CALLBACK_ERROR);
+
+    if (node === null) return;
+
+    callback(node);
+    this.preOrder(callback, node.left);
+    this.preOrder(callback, node.right);
+  }
+  postOrder(callback, node = this.root) {
+    if (!callback) throw new Error(this.CALLBACK_ERROR);
+
+    if (node === null) return;
+
+    this.postOrder(callback, node.left);
+    this.postOrder(callback, node.right);
+    callback(node);
   }
 }
 
@@ -111,4 +140,4 @@ tree.deleteItem(5);
 tree.deleteItem(8);
 
 prettyPrint(tree.root);
-tree.levelOrder((node) => console.log(node.data));
+tree.postOrder((node) => console.log(node.data));
