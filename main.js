@@ -9,21 +9,54 @@ class Tree {
 
     let node = this.root;
     while (node !== null) {
-      if (value < node.data) {
+      if (value === node.data) {
+        return;
+      } else if (value < node.data) {
         if (!node.left) {
           node.left = newNode;
           return;
-        } else {
-          node = node.left;
         }
+
+        node = node.left;
       } else {
         if (!node.right) {
           node.right = newNode;
           return;
-        } else {
-          node = node.right;
         }
+
+        node = node.right;
       }
+    }
+  }
+  deleteItem(value) {
+    let node = this.root;
+    this.deleteNode(node, value);
+  }
+  deleteNode(node, value) {
+    if (node === null) return null;
+
+    if (value === node.data) {
+      if (node.left === null && node.right === null) {
+        return null;
+      } else if (node.left === null) {
+        return node.right;
+      } else if (node.right === null) {
+        return node.left;
+      } else {
+        let temp = node.right;
+        while (temp.left !== null) {
+          temp = temp.left;
+        }
+        node.data = temp.data;
+        node.right = this.deleteNode(node.right, temp.data);
+        return node;
+      }
+    } else if (value < node.data) {
+      node.left = this.deleteNode(node.left, value);
+      return node;
+    } else {
+      node.right = this.deleteNode(node.right, value);
+      return node;
     }
   }
 }
@@ -68,8 +101,14 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
   }
 };
-prettyPrint(tree.root);
 tree.insert(6);
+tree.insert(6);
+tree.insert(27);
+tree.insert(16);
+tree.insert(0);
+
+prettyPrint(tree.root);
+tree.deleteItem(4);
 prettyPrint(tree.root);
 
 function removeDuplicatesInSortedArray(array) {
