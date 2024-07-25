@@ -131,6 +131,17 @@ class Tree {
     }
     return Math.max(newMaxHeightLeft, maxHeightRight);
   }
+  depth(node, searchNode = this.root, currentDepth = 0) {
+    if (searchNode === null || node === null) return;
+
+    if (searchNode.data === node.data) {
+      return currentDepth;
+    } else if (searchNode.data > node.data) {
+      return this.depth(node, searchNode.left, ++currentDepth);
+    } else {
+      return this.depth(node, searchNode.right, ++currentDepth);
+    }
+  }
 }
 
 class Node {
@@ -157,4 +168,4 @@ tree.deleteItem(5);
 tree.deleteItem(8);
 
 prettyPrint(tree.root);
-console.log(tree.height(tree.find(9)));
+console.log(tree.depth(tree.find(0)));
