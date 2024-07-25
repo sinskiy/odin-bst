@@ -114,6 +114,23 @@ class Tree {
     this.postOrder(callback, node.right);
     callback(node);
   }
+  height(node, maxHeightLeft = 0, maxHeightRight = 0) {
+    if (node === null) return;
+
+    // this variable it created to prevent maxHeightLeft from being changed inside of function call determening new maxHeightRight
+    let newMaxHeightLeft = maxHeightLeft;
+    if (node.left !== null) {
+      newMaxHeightLeft = this.height(
+        node.left,
+        ++maxHeightLeft,
+        maxHeightRight
+      );
+    }
+    if (node.right !== null) {
+      maxHeightRight = this.height(node.right, maxHeightLeft, ++maxHeightRight);
+    }
+    return Math.max(newMaxHeightLeft, maxHeightRight);
+  }
 }
 
 class Node {
@@ -140,4 +157,4 @@ tree.deleteItem(5);
 tree.deleteItem(8);
 
 prettyPrint(tree.root);
-tree.postOrder((node) => console.log(node.data));
+console.log(tree.height(tree.find(9)));
