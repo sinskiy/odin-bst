@@ -5,34 +5,26 @@ class Tree {
     this.root = buildTree(filtered);
   }
   insert(value) {
+    this.insertStartingAt(this.root, value);
+  }
+  insertStartingAt(node, value) {
     const newNode = new Node(value);
 
-    let node = this.root;
-    while (node !== null) {
-      if (value === node.data) {
-        return;
-      } else if (value < node.data) {
-        if (!node.left) {
-          node.left = newNode;
-          return;
-        }
-
-        node = node.left;
-      } else {
-        if (!node.right) {
-          node.right = newNode;
-          return;
-        }
-
-        node = node.right;
-      }
+    console.log(node);
+    if (node === null) {
+      return newNode;
+    } else if (value === node.data) {
+      return;
+    } else if (value < node.data) {
+      node.left = this.insertStartingAt(node.left, value) || node.left;
+    } else {
+      node.right = this.insertStartingAt(node.right, value) || node.right;
     }
   }
   deleteItem(value) {
-    let node = this.root;
-    this.deleteNode(node, value);
+    this.deleteStartingAt(this.root, value);
   }
-  deleteNode(node, value) {
+  deleteStartingAt(node, value) {
     if (node === null) return null;
 
     if (value === node.data) {
@@ -48,14 +40,14 @@ class Tree {
           temp = temp.left;
         }
         node.data = temp.data;
-        node.right = this.deleteNode(node.right, temp.data);
+        node.right = this.deleteStartingAt(node.right, temp.data);
         return node;
       }
     } else if (value < node.data) {
-      node.left = this.deleteNode(node.left, value);
+      node.left = this.deleteStartingAt(node.left, value);
       return node;
     } else {
-      node.right = this.deleteNode(node.right, value);
+      node.right = this.deleteStartingAt(node.right, value);
       return node;
     }
   }
@@ -109,6 +101,10 @@ tree.insert(0);
 
 prettyPrint(tree.root);
 tree.deleteItem(4);
+tree.deleteItem(27);
+tree.deleteItem(67);
+tree.deleteItem(5);
+tree.deleteItem(8);
 prettyPrint(tree.root);
 
 function removeDuplicatesInSortedArray(array) {
