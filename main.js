@@ -1,6 +1,10 @@
-import { removeDuplicatesInSortedArray, prettyPrint } from "./helpers.js";
+import {
+  removeDuplicatesInSortedArray,
+  prettyPrint,
+  createRandomTreeArray,
+} from "./helpers.js";
 
-class Tree {
+export default class Tree {
   constructor(array) {
     this.CALLBACK_ERROR = "Callback must be  provided";
 
@@ -142,6 +146,22 @@ class Tree {
       return this.depth(node, searchNode.right, ++currentDepth);
     }
   }
+  isBalanced(node = this.root) {
+    if (node === null) {
+      return true;
+    }
+
+    const left = this.isBalanced(node.left);
+    if (!left) return false;
+    const right = this.isBalanced(node.right);
+    if (!right) return false;
+
+    if (Math.abs(left - right) > 1) return false;
+
+    // If we reached this as a root, tree is balanced
+    if (this.root.data === node.data) return true;
+    return Math.max(left, right) + 1;
+  }
 }
 
 class Node {
@@ -151,21 +171,3 @@ class Node {
     this.right = null;
   }
 }
-
-const tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-
-// TODO: delete when finished
-tree.insert(6);
-tree.insert(6);
-tree.insert(27);
-tree.insert(16);
-tree.insert(0);
-
-tree.deleteItem(4);
-tree.deleteItem(27);
-tree.deleteItem(67);
-tree.deleteItem(5);
-tree.deleteItem(8);
-
-prettyPrint(tree.root);
-console.log(tree.depth(tree.find(0)));
